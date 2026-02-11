@@ -1,11 +1,11 @@
-import { useHover } from "../shared/hooks";
+import { useViewportSize } from "../shared/hooks/useViewportSize";
 
 export const Demo = () => {
-  const { hovered, ref } = useHover();
+  const { width, height } = useViewportSize();
 
   return (
-    <div ref={ref}>
-      {hovered ? "На меня навели мышку" : "Наведи мышкой на меня"}
-    </div>
+    <>
+      Width: {width}, height: {height}
+    </>
   );
 };
