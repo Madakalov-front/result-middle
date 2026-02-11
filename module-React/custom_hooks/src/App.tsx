@@ -1,10 +1,11 @@
 import "./App.css";
-import { Demo } from "./components";
+import { Demo, Demo2 } from "./components";
 
 function App() {
   return (
     <>
-      <Demo />
+      {/* <Demo /> */}
+      <Demo2 />
     </>
   );
 }
