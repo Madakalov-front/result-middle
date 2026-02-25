@@ -5,19 +5,21 @@ import type { IFetchCharacters } from "../model";
 import { Suspense } from "react";
 
 export const CharactersPage = () => {
-  const results = useLoaderData() as IFetchCharacters[];
+  const data = useLoaderData() as Promise<IFetchCharacters[]>;
   return (
     <>
       <TitlePage title="Characters page" />
-      <Suspense fallback={<p>Loading characters...</p>}>
-        <Await resolve={results}>
-          <Container>
-            {results.map(({ name, image, id }) => (
-              <Link to={id.toString()} key={id}>
-                <CardCharacter name={name} image={image} />
-              </Link>
-            ))}
-          </Container>
+      <Suspense>
+        <Await resolve={data}>
+          {(resolveCharacters) => (
+            <Container>
+              {resolveCharacters.map(({ name, image, id }) => (
+                <Link to={id.toString()} key={id}>
+                  <CardCharacter name={name} image={image} />
+                </Link>
+              ))}
+            </Container>
+          )}
         </Await>
       </Suspense>
     </>

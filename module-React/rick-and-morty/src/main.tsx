@@ -5,9 +5,6 @@ import { RootRoute } from "./app/layout";
 import { ROUTE } from "./shared/config";
 import { HomePage } from "./pages/home-page";
 import "./index.css";
-import { CharactersPage } from "./pages/characters-page";
-import { LocationsPage } from "./pages/locations-page";
-import { EpisodesPage } from "./pages/episodes-page";
 import { CharactersDetailPage } from "./pages/characters-detail-page/ui/CharactersDetailPage";
 import { fetchCharactersDetail } from "./pages/characters-detail-page/model";
 import { RouteErrorBoundary } from "./pages/route-error-boundary";
@@ -28,7 +25,7 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE.characters.list,
-        element: <CharactersPage />,
+        hydrateFallbackElement: <p>Loading characters...</p>,
         lazy: async () => {
           const module = await import("./pages/characters-page");
           const { fetchCharacters } =
@@ -36,7 +33,7 @@ const router = createBrowserRouter([
 
           return {
             Component: module.CharactersPage,
-            loader: fetchCharacters,
+            loader:  fetchCharacters,
           };
         },
       },
@@ -54,7 +51,8 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE.locations.list,
-        element: <LocationsPage />,
+        hydrateFallbackElement: <p>Loading locations...</p>,
+
         lazy: async () => {
           const module = await import("./pages/locations-page");
           const { fetchLocations } =
@@ -73,7 +71,7 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE.episodes.list,
-        element: <EpisodesPage />,
+        hydrateFallbackElement: <p>Loading episodes...</p>,
         lazy: async () => {
           const module = await import("./pages/episodes-page");
           const { fetchEpisodes } = await import("./pages/episodes-page/model");
