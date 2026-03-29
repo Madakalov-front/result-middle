@@ -1,0 +1,235 @@
+:root {
+    --p-inline-xs: 10px;
+    --p-inline-sm: 12px;
+    --p-inline-md: 14px;
+    --p-inline-lg: 16px;
+    --p-inline-xl: 20px;
+
+    --p-inline-icon-xs: 30px;
+    --p-inline-icon-sm: 32px;
+    --p-inline-icon-md: 34px;
+    --p-inline-icon-lg: 36px;
+    --p-inline-icon-xl: 40px;
+
+    --border-radius-xs: 2px;
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 32px;
+
+    --error-color: #fa5252;
+
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
+    &--size-xs {
+        .field__input-wrapper {
+            height: 30px;
+        }
+
+        .field__input-wrapper {
+            padding-inline: var(--p-inline-xs);
+
+            &:has(.field__icon) {
+                padding-inline-start: var(--p-inline-icon-xs);
+            }
+        }
+
+        .field__label,
+        .field__input,
+        .field__icon {
+            font-size: 12px;
+        }
+
+        .field__description,
+        .field__error {
+            font-size: 10px;
+        }
+
+    }
+
+    &--size-sm {
+        .field__input-wrapper {
+            height: 36px;
+        }
+
+        .field__input-wrapper {
+            padding-inline: var(--p-inline-sm);
+
+            &:has(.field__icon) {
+                padding-inline-start: var(--p-inline-icon-sm);
+            }
+        }
+
+
+        .field__label,
+        .field__input,
+        .field__icon {
+            font-size: 14px;
+        }
+
+        .field__description,
+        .field__error {
+            font-size: 12px;
+        }
+    }
+
+    &--size-md {
+        .field__input-wrapper {
+            height: 42px;
+        }
+
+        .field__input-wrapper {
+            padding-inline: var(--p-inline-md);
+
+            &:has(.field__icon) {
+                padding-inline-start: var(--p-inline-icon-md);
+            }
+        }
+
+        .field__label,
+        .field__input,
+        .field__icon {
+            font-size: 16px;
+        }
+
+        .field__description,
+        .field__error {
+            font-size: 14px;
+        }
+    }
+
+    &--size-lg {
+        .field__input-wrapper {
+            height: 50px;
+        }
+
+        .field__input-wrapper {
+            padding-inline: var(--p-inline-lg);
+
+            &:has(.field__icon) {
+                padding-inline-start: var(--p-inline-icon-lg);
+            }
+        }
+
+        .field__label,
+        .field__input,
+        .field__icon {
+            font-size: 18px;
+        }
+
+        .field__description,
+        .field__error {
+            font-size: 16px;
+        }
+    }
+
+    &--size-xl {
+        .field__input-wrapper {
+            height: 60px;
+        }
+
+        .field__input-wrapper {
+            padding-inline: var(--p-inline-xl);
+
+            &:has(.field__icon) {
+                padding-inline-start: var(--p-inline-icon-xl);
+            }
+        }
+
+
+        .field__label,
+        .field__input,
+        .field__icon {
+            font-size: 20px;
+        }
+
+        .field__description,
+        .field__error {
+            font-size: 18px;
+        }
+    }
+
+    &__label {}
+
+    &__description {}
+
+    &__input-wrapper {
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        &--variant-default {
+            border: 1px solid #ccc;
+        }
+
+        &--variant-filled {
+            background-color: #f1f3f5;
+        }
+
+        &--variant-unstyled {
+            background-color: transparent;
+            border: 0;
+            padding-inline: 0 !important;
+        }
+
+        &--radius-xs {
+            border-radius: var(--border-radius-xs);
+        }
+
+        &--radius-sm {
+            border-radius: var(--border-radius-sm);
+        }
+
+        &--radius-md {
+            border-radius: var(--border-radius-md);
+        }
+
+        &--radius-lg {
+            border-radius: var(--border-radius-lg);
+        }
+
+        &--radius-xl {
+            border-radius: var(--border-radius-xl);
+        }
+
+        &--error {
+            border-color: var(--error-color);
+
+            .field__input {
+                &::placeholder {
+                    color: var(--error-color);
+                }
+            }
+        }
+
+        &:has([type="radio"]) {
+            border: 0;
+            height: auto;
+            padding: 0;
+        }
+
+    }
+
+    &__icon {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translate(50%, -50%);
+    }
+
+    &__input {
+        height: 100%;
+        background-color: transparent;
+
+
+    }
+
+    &__error {
+        color: var(--error-color);
+    }
+}
