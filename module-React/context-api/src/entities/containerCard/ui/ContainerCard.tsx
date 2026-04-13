@@ -5,8 +5,9 @@ export const ContainerCard = ({ children }: { children: ReactNode[] }) => {
     <ul
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(5, 1fr)",
-        gap: "8px 16px",
+        gridTemplateColumns: "repeat(1, 1fr)",
+        height: "100%",
+        gap: "22px 32px",
         listStyle: "none",
       }}
     >
