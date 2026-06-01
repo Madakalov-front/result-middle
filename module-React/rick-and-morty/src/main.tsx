@@ -12,6 +12,9 @@ import { LocationDetailPage } from "./locations-detail-page";
 import { fetchLocationDetail } from "./locations-detail-page/model/fetchLocationDetail";
 import { EpisodeDetailPage } from "./pages/episode-detail-page";
 import { fetchEpisodeDetail } from "./pages/episode-detail-page/model";
+import { registerSW } from "virtual:pwa-register";
+
+registerSW({ immediate: true });
 
 const router = createBrowserRouter([
   {
@@ -33,7 +36,7 @@ const router = createBrowserRouter([
 
           return {
             Component: module.CharactersPage,
-            loader:  fetchCharacters,
+            loader: fetchCharacters,
           };
         },
       },
