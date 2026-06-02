@@ -1,3 +1,3 @@
-// Локальные JSON больше не используются — данные загружаются через RTK Query (src/store/api/contactsApi.ts).
+// Локальные JSON не используются — данные загружаются в ContactsStore (src/store/ContactsStore.ts).
 
 export {};

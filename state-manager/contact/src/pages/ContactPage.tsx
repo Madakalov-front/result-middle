@@ -1,22 +1,20 @@
-import React, {memo, useMemo} from 'react';
+import React from 'react';
+import {observer} from 'mobx-react-lite';
 import {Col, Row} from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 import {ContactCard} from 'src/components/ContactCard';
 import {Empty} from 'src/components/Empty';
 import {QueryStatus} from 'src/components/QueryStatus';
-import {useGetContactsQuery} from 'src/store/api/contactsApi';
+import {useContactsStore} from 'src/store';
+import {ContactRouteParams} from 'src/types/routes';
 
-export const ContactPage = memo(() => {
-  const {contactId} = useParams<{contactId: string}>();
-  const {data: contacts = [], isLoading, isError} = useGetContactsQuery();
-
-  const contact = useMemo(
-    () => contacts.find(({id}) => id === contactId),
-    [contacts, contactId]
-  );
+const ContactPageView = (): React.ReactElement => {
+  const {contactId} = useParams<ContactRouteParams>();
+  const store = useContactsStore();
+  const contact = store.getContactById(contactId);
 
   return (
-    <QueryStatus isLoading={isLoading} isError={isError}>
+    <QueryStatus isLoading={store.contactsLoading} isError={store.contactsError}>
       <Row xxl={3}>
         <Col className="mx-auto">
           {contact ? <ContactCard contact={contact} /> : <Empty />}
@@ -24,4 +22,6 @@ export const ContactPage = memo(() => {
       </Row>
     </QueryStatus>
   );
-});
+};
+
+export const ContactPage = observer(ContactPageView);

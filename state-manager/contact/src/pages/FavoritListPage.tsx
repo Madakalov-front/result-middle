@@ -1,19 +1,17 @@
-import React, {memo} from 'react';
+import React from 'react';
+import {observer} from 'mobx-react-lite';
 import {Col, Row} from 'react-bootstrap';
 import {ContactCard} from 'src/components/ContactCard';
 import {QueryStatus} from 'src/components/QueryStatus';
-import {useGetContactsQuery} from 'src/store/api/contactsApi';
-import {useAppSelector} from 'src/store/hooks';
-import {selectFavoriteContacts} from 'src/store/slices/favoritesSlice';
+import {useContactsStore} from 'src/store';
 
-export const FavoritListPage = memo(() => {
-  const {isLoading, isError} = useGetContactsQuery();
-  const contacts = useAppSelector(selectFavoriteContacts);
+const FavoritListPageView = (): React.ReactElement => {
+  const store = useContactsStore();
 
   return (
-    <QueryStatus isLoading={isLoading} isError={isError}>
+    <QueryStatus isLoading={store.contactsLoading} isError={store.contactsError}>
       <Row xxl={4} className="g-4">
-        {contacts.map((contact) => (
+        {store.favoriteContacts.map((contact) => (
           <Col key={contact.id}>
             <ContactCard contact={contact} withLink />
           </Col>
@@ -21,4 +19,6 @@ export const FavoritListPage = memo(() => {
       </Row>
     </QueryStatus>
   );
-});
+};
+
+export const FavoritListPage = observer(FavoritListPageView);

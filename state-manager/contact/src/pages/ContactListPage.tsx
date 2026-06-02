@@ -1,54 +1,47 @@
-import React, {memo, useMemo, useState} from 'react';
+import React, {useState} from 'react';
+import {observer} from 'mobx-react-lite';
 import {Col, Row} from 'react-bootstrap';
 import {ContactCard} from 'src/components/ContactCard';
 import {FilterForm, FilterFormValues} from 'src/components/FilterForm';
 import {QueryStatus} from 'src/components/QueryStatus';
-import {useGetContactsQuery, useGetGroupsQuery} from 'src/store/api/contactsApi';
+import {useContactsStore} from 'src/store';
+import {ContactDto} from 'src/types/dto/ContactDto';
+import {GroupContactsDto} from 'src/types/dto/GroupContactsDto';
 
-export const ContactListPage = memo(() => {
-  const {
-    data: allContacts = [],
-    isLoading: isContactsLoading,
-    isError: isContactsError,
-  } = useGetContactsQuery();
-  const {
-    data: groups = [],
-    isLoading: isGroupsLoading,
-    isError: isGroupsError,
-  } = useGetGroupsQuery();
+const ContactListPageView = (): React.ReactElement => {
+  const store = useContactsStore();
   const [filter, setFilter] = useState<Partial<FilterFormValues>>({});
 
-  const contacts = useMemo(() => {
-    let result = allContacts;
+  const contacts: ContactDto[] = (() => {
+    let result: ContactDto[] = store.contacts.slice();
 
     if (filter.name) {
       const nameQuery = filter.name.toLowerCase();
-      result = result.filter(({name}) => name.toLowerCase().includes(nameQuery));
+      result = result.filter((contact) =>
+        contact.name.toLowerCase().includes(nameQuery)
+      );
     }
 
     if (filter.groupId) {
-      const group = groups.find(({id}) => id === filter.groupId);
+      const group = store.groups.find((g: GroupContactsDto) => g.id === filter.groupId);
 
       if (group) {
-        result = result.filter(({id}) => group.contactIds.includes(id));
+        result = result.filter((contact) => group.contactIds.includes(contact.id));
       }
     }
 
     return result;
-  }, [allContacts, groups, filter]);
+  })();
 
   const onSubmit = (fv: Partial<FilterFormValues>) => {
     setFilter(fv);
   };
 
   return (
-    <QueryStatus
-      isLoading={isContactsLoading || isGroupsLoading}
-      isError={isContactsError || isGroupsError}
-    >
+    <QueryStatus isLoading={store.isLoading} isError={store.isError}>
       <Row xxl={1}>
         <Col className="mb-3">
-          <FilterForm groupContactsList={groups} initialValues={{}} onSubmit={onSubmit} />
+          <FilterForm groupContactsList={store.groups} initialValues={{}} onSubmit={onSubmit} />
         </Col>
         <Col>
           <Row xxl={4} className="g-4">
@@ -62,4 +55,6 @@ export const ContactListPage = memo(() => {
       </Row>
     </QueryStatus>
   );
-});
+};
+
+export const ContactListPage = observer(ContactListPageView);

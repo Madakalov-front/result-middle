@@ -1,16 +1,17 @@
-import React, {memo} from 'react';
+import React from 'react';
+import {observer} from 'mobx-react-lite';
 import {Col, Row} from 'react-bootstrap';
 import {GroupContactsCard} from 'src/components/GroupContactsCard';
 import {QueryStatus} from 'src/components/QueryStatus';
-import {useGetGroupsQuery} from 'src/store/api/contactsApi';
+import {useContactsStore} from 'src/store';
 
-export const GroupListPage = memo(() => {
-  const {data: groups = [], isLoading, isError} = useGetGroupsQuery();
+const GroupListPageView = (): React.ReactElement => {
+  const store = useContactsStore();
 
   return (
-    <QueryStatus isLoading={isLoading} isError={isError}>
+    <QueryStatus isLoading={store.groupsLoading} isError={store.groupsError}>
       <Row xxl={4}>
-        {groups.map((groupContacts) => (
+        {store.groups.map((groupContacts) => (
           <Col key={groupContacts.id}>
             <GroupContactsCard groupContacts={groupContacts} withLink />
           </Col>
@@ -18,4 +19,6 @@ export const GroupListPage = memo(() => {
       </Row>
     </QueryStatus>
   );
-});
+};
+
+export const GroupListPage = observer(GroupListPageView);

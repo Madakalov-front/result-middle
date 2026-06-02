@@ -1,15 +1,14 @@
 import React from 'react';
 import './MainApp.scss';
-import {Provider} from 'react-redux';
 import {ThemeProvider} from 'react-bootstrap';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {Layout} from 'src/components/Layout';
 import {ContactListPage, GroupPage, ContactPage, FavoritListPage, GroupListPage} from 'src/pages';
-import {store} from 'src/store';
+import {StoreProvider} from 'src/store';
 
 export const MainApp = () => {
   return (
-    <Provider store={store}>
+    <StoreProvider>
       <ThemeProvider
         breakpoints={['xxxl', 'xxl', 'xl', 'lg', 'md', 'sm', 'xs', 'xxs']}
         minBreakpoint="xxs"
@@ -31,6 +30,6 @@ export const MainApp = () => {
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
-    </Provider>
+    </StoreProvider>
   );
 };

@@ -1,45 +1,25 @@
-import React, {memo, useMemo} from 'react';
+import React from 'react';
+import {observer} from 'mobx-react-lite';
 import {Col, Row} from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 import {GroupContactsCard} from 'src/components/GroupContactsCard';
 import {Empty} from 'src/components/Empty';
 import {ContactCard} from 'src/components/ContactCard';
 import {QueryStatus} from 'src/components/QueryStatus';
-import {useGetContactsQuery, useGetGroupsQuery} from 'src/store/api/contactsApi';
+import {useContactsStore} from 'src/store';
+import {GroupRouteParams} from 'src/types/routes';
 
-export const GroupPage = memo(() => {
-  const {groupId} = useParams<{groupId: string}>();
-  const {
-    data: allContacts = [],
-    isLoading: isContactsLoading,
-    isError: isContactsError,
-  } = useGetContactsQuery();
-  const {
-    data: groups = [],
-    isLoading: isGroupsLoading,
-    isError: isGroupsError,
-  } = useGetGroupsQuery();
-
-  const groupContacts = useMemo(
-    () => groups.find(({id}) => id === groupId),
-    [groups, groupId]
-  );
-
-  const contacts = useMemo(() => {
-    if (!groupContacts) {
-      return [];
-    }
-
-    return allContacts.filter(({id}) => groupContacts.contactIds.includes(id));
-  }, [allContacts, groupContacts]);
+const GroupPageView = (): React.ReactElement => {
+  const {groupId} = useParams<GroupRouteParams>();
+  const store = useContactsStore();
+  const groupContacts = store.getGroupById(groupId);
+  const contacts = store.getContactsByGroupId(groupId);
+  const isDataReady = !store.isLoading && !store.isError;
 
   return (
-    <QueryStatus
-      isLoading={isContactsLoading || isGroupsLoading}
-      isError={isContactsError || isGroupsError}
-    >
+    <QueryStatus isLoading={store.isLoading} isError={store.isError}>
       <Row className="g-4">
-        {groupContacts ? (
+        {isDataReady && groupContacts ? (
           <>
             <Col xxl={12}>
               <Row xxl={3}>
@@ -58,10 +38,12 @@ export const GroupPage = memo(() => {
               </Row>
             </Col>
           </>
-        ) : (
+        ) : isDataReady ? (
           <Empty />
-        )}
+        ) : null}
       </Row>
     </QueryStatus>
   );
-});
+};
+
+export const GroupPage = observer(GroupPageView);
