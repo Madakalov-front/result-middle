@@ -2,13 +2,20 @@ import React, {memo, useMemo, useState} from 'react';
 import {Col, Row} from 'react-bootstrap';
 import {ContactCard} from 'src/components/ContactCard';
 import {FilterForm, FilterFormValues} from 'src/components/FilterForm';
-import {useAppSelector} from 'src/store/hooks';
-import {selectAllContacts} from 'src/store/slices/contactsSlice';
-import {selectAllGroups} from 'src/store/slices/groupsSlice';
+import {QueryStatus} from 'src/components/QueryStatus';
+import {useGetContactsQuery, useGetGroupsQuery} from 'src/store/api/contactsApi';
 
 export const ContactListPage = memo(() => {
-  const allContacts = useAppSelector(selectAllContacts);
-  const groups = useAppSelector(selectAllGroups);
+  const {
+    data: allContacts = [],
+    isLoading: isContactsLoading,
+    isError: isContactsError,
+  } = useGetContactsQuery();
+  const {
+    data: groups = [],
+    isLoading: isGroupsLoading,
+    isError: isGroupsError,
+  } = useGetGroupsQuery();
   const [filter, setFilter] = useState<Partial<FilterFormValues>>({});
 
   const contacts = useMemo(() => {
@@ -35,19 +42,24 @@ export const ContactListPage = memo(() => {
   };
 
   return (
-    <Row xxl={1}>
-      <Col className="mb-3">
-        <FilterForm groupContactsList={groups} initialValues={{}} onSubmit={onSubmit} />
-      </Col>
-      <Col>
-        <Row xxl={4} className="g-4">
-          {contacts.map((contact) => (
-            <Col key={contact.id}>
-              <ContactCard contact={contact} withLink />
-            </Col>
-          ))}
-        </Row>
-      </Col>
-    </Row>
+    <QueryStatus
+      isLoading={isContactsLoading || isGroupsLoading}
+      isError={isContactsError || isGroupsError}
+    >
+      <Row xxl={1}>
+        <Col className="mb-3">
+          <FilterForm groupContactsList={groups} initialValues={{}} onSubmit={onSubmit} />
+        </Col>
+        <Col>
+          <Row xxl={4} className="g-4">
+            {contacts.map((contact) => (
+              <Col key={contact.id}>
+                <ContactCard contact={contact} withLink />
+              </Col>
+            ))}
+          </Row>
+        </Col>
+      </Row>
+    </QueryStatus>
   );
 });

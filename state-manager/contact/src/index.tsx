@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import {setupListeners} from '@reduxjs/toolkit/query';
 import './index.scss';
 import {MainApp} from './apps/MainApp';
+import {store} from './store';
 import reportWebVitals from './reportWebVitals';
+
+setupListeners(store.dispatch);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

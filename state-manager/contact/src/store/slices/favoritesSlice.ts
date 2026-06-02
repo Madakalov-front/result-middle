@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {ContactDto} from 'src/types/dto/ContactDto';
+import {contactsApi} from '../api/contactsApi';
 import type {RootState} from '../types';
-import {selectAllContacts} from './contactsSlice';
 
 export interface FavoritesState {
   ids: ContactDto['id'][];
@@ -26,6 +26,16 @@ export const favoritesSlice = createSlice({
       }
     },
   },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      contactsApi.endpoints.getContacts.matchFulfilled,
+      (state, {payload}) => {
+        if (state.ids.length === 0 && payload.length > 0) {
+          state.ids = payload.slice(0, 4).map(({id}) => id);
+        }
+      }
+    );
+  },
 });
 
 export const {toggleFavorite} = favoritesSlice.actions;
@@ -37,7 +47,7 @@ export const selectIsFavorite = (contactId: ContactDto['id']) => (state: RootSta
   state.favorites.ids.includes(contactId);
 
 export const selectFavoriteContacts = (state: RootState) => {
-  const contacts = selectAllContacts(state);
+  const contacts = contactsApi.endpoints.getContacts.select()(state).data ?? [];
   const favoriteIds = selectFavoriteIds(state);
 
   return contacts.filter(({id}) => favoriteIds.includes(id));
